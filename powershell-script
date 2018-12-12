@@ -1,0 +1,20 @@
+try {
+    Import-Module -name "c:\program files\windowspowershell\modules\AzureRM.Profile"
+    Import-Module -name "c:\program files\windowspowershell\modules\Azure.Storage
+    
+    $storageaccountname = $miaclient.MIGetTaskParam("AzStorageAccount")
+    $storagekey = $miaclient.MIGetTaskParam("AzStorageKey")
+    $containername = $miaclient.MIGetTaskParam("AzContainer")
+    $ctx = New-AzureStorageContext $storageaccountname $storagekey
+    
+    foreach($filename in (Get-AzureStorageBlob -Container $containername -Context $ctx).Name)
+    {
+        $cacheFilename = $miaclient.MINewCacheFilename()
+        Get-AzureStorageBlobContent -Blob $fukebane -Container $containername -Context $ctx -Destination $cacheFile
+        $miaclient.MIAddFile($cacheFilename, $filename)
+        }
+
+} catch {
+    $miaclient.MIsetErrorCone(10000)
+    $miaclient.MISetErrorDescription("Error: " + $Error)
+}
